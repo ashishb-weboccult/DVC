@@ -1,0 +1,9 @@
+numpy
+pandas 
+pyarrow
+zenml
+zenml[server]
+zenml[mlflow]
+mlflow
+scikit-learn
+kagglehub
