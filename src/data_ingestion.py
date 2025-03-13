@@ -4,10 +4,11 @@ import numpy as np
 import pandas as pd 
 import kagglehub
 from abc import ABC, abstractmethod
-from zenml.logger import get_logger 
+# from zenml.logger import get_logger 
+from logging import getLogger
 from sklearn.datasets import load_diabetes
 
-logger = get_logger(__name__) 
+logger = getLogger(__name__) 
 
 class DataIngestionStrategy(ABC):
     """
@@ -30,7 +31,6 @@ class IngestFromPath(DataIngestionStrategy):
     def load_data(self)->pd.DataFrame: 
 
         try: 
-
             data_frame =pd.read_csv(self.data_path)
             logger.info(f"DataFrame is loaded sucessfully from the given path : {self.data_path}0")
             return data_frame 

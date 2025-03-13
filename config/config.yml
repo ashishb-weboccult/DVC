@@ -1,0 +1,6 @@
+INGESTION:
+  DATA_PATH: "data/Stroke_Prediction_Indians.csv"
+
+PREPROCESS:
+  
+

@@ -1,21 +1,36 @@
-from zenml import step 
 import pandas as pd
-import numpy as np 
-from typing_extensions import Annotated
+import logging
+from typing import Annotated
 from src.data_ingestion import Ingestor, IngestFromPath
-from config.configuration import DEFAULT_DATA_PATH 
 
-@step
-def ingest_data(dataframe_path: str=DEFAULT_DATA_PATH)-> Annotated[pd.DataFrame, "Loaded DataFrame"]:
-    """
-    this steps will ingestion the data fromi the givne
-    """
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
-    try: 
-        ingestion_strategy = IngestFromPath(data_path=dataframe_path) 
-        ingestor = Ingestor(ingestion_strategy) 
-        df = ingestor.load_data() 
-        return df 
+def ingest_data(data_path: str)->Annotated[pd.DataFrame, "Loaded Dataframe"]:
+    """this will ingest the data into DataFrame Ojb from your given path 
     
-    except Exception as e: 
+    Args: 
+        data_path: str input path to the data
+
+    returns: 
+        Annotated[pd.DataFram, "Loaded Dataframe"]
+    """
+    try: 
+        try: 
+            ingest_strategy = IngestFromPath(data_path =data_path)
+            ingestor = Ingestor(ingestion_strategy= ingest_strategy) 
+            df = ingestor.load_data()
+            logger.info(f"Data ingested successfully from {data_path}")
+
+        except:
+            raise ValueError(f"Failed to ingest data from the given path {data_path}")
+
+    except ValueError as e: 
+        logging.error(f"Error in ingestion: {e}")
         raise e 
+
+    else:
+        return df   
+    
+    finally: 
+        logger.info("Ingestion step is completed")

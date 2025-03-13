@@ -1,35 +1,55 @@
-from zenml import step 
-from typing_extensions import Annotated 
-from typing import Tuple
 import pandas as pd
-from src.data_preprocesor import DataPreProcessor, SplitData, DataCleaning, SandardScaling 
+import logging
+from typing import Annotated, Tuple
+from src.data_preprocesor import DataPreProcessor, SplitData, DataCleaning, SandardScaling
 
-@step 
-def process_data(df: pd.DataFrame)->Tuple[ 
-    Annotated[pd.DataFrame, "X_train"],
-    Annotated[pd.Series, "y_train"],
-    Annotated[pd.DataFrame, "X_test"],
-    Annotated[pd.Series, "y_test"], 
-    ]: 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
-    try :
-        #clearning the data
-        cleaning_strategy=DataCleaning(dataframe=df) 
-        processor = DataPreProcessor(data_stratergy=cleaning_strategy)
-        cleaned_data = processor.process_data()
-
-        #split into training and testing: 
-        splitting_strategy = SplitData(DataFrame=cleaned_data,test_size=0.2, random_state=42)
-        processor = DataPreProcessor(data_stratergy=splitting_strategy)
-        X_train, X_test, y_train, y_test = processor.process_data() 
+def preprocess_data(dataframe: pd.DataFrame)->Tuple[
+    Annotated[pd.DataFrame, 'X_train'], 
+    Annotated[pd.DataFrame, 'X_test'],
+    Annotated[pd.DataFrame, 'y_train'],
+    Annotated[pd.DataFrame, 'y_test'], 
+]:
+    """
+    this will return the train and test dataframes for the model 
+    """
+    try:
+        try:
+            data_clearning_strategy = DataCleaning(dataframe=dataframe)
+            preprocesor = DataPreProcessor(data_stratergy=data_clearning_strategy)
+            processed_data = preprocesor.process_data()
+            logger.info("Data Preprocessed Successfully")
+        
+        except:
+            raise ValueError("Failed to preprocess the data") 
+        
+        try: 
+            split_data_strategy = SplitData(DataFrame=processed_data)
+            preprocesor = DataPreProcessor(data_stratergy=split_data_strategy)
+            X_train, X_test, y_train, y_test = preprocesor.process_data()
+            logger.info("Data Split Successfully")
+        
+        except: 
+            raise ValueError("Failed to split the data")
     
-        #apply the standard scaling on teh train test data: 
-        scalling_strategy = SandardScaling(X_train, X_test)
-        processor = DataPreProcessor(data_stratergy=scalling_strategy)
-        Scaled_X_train, Scaled_X_test = processor.process_data() 
+        try:
+            scaling_strategy = SandardScaling(X_train=X_train, X_test=X_test)
+            preprocessor = DataPreProcessor(data_stratergy=scaling_strategy)
 
-        return Scaled_X_train, y_train, Scaled_X_test, y_test  
-    
-    except Exception as e:
+            X_train, X_test = preprocessor.process_data()
+            logger.info("Data Scaled Successfully")
+        
+        except:
+            raise ValueError("Failed to scale the data")
+
+    except ValueError as e:
+        logger.error(f"Error in preprocess the data: {e}")
         raise e 
 
+    else:
+        return X_train, X_test, y_train, y_test
+
+    finally:
+        logger.info("Preprocess step hsas")
