@@ -1,14 +1,19 @@
 stages:
   Ingestion:
     cmd: PYTHONPATH=. python steps/ingestion.py
-    
+
     params:
-      - INGESTION.DATA_PATH
+    - INGESTION.DATA_PATH
     deps:
     - data
     - src/data_ingestion.py
-    - steps/ingestion.py 
+    - steps/ingestion.py
 
-    # outs:
-    # - data/Stroke_Prediction_Indians.csv
-    
+  Preprocessing:
+    cmd: PYTHONPATH=. python steps/preprocess.py
+    deps:
+    - src/data_ingestion.py
+    - src/data_preprocesor.py
+    params:
+    - PREPROCESSING.RANDOM_STATE
+    - PREPROCESSING.TEST_SIZE

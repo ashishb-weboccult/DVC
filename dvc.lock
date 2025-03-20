@@ -19,3 +19,18 @@ stages:
     params:
       params.yaml:
         INGESTION.DATA_PATH: data/Stroke_Prediction_Indians.csv
+  Preprocessing:
+    cmd: PYTHONPATH=. python steps/preprocess.py
+    deps:
+    - path: src/data_ingestion.py
+      hash: md5
+      md5: 5fa3ff2ce304162819d474eb0cb41536
+      size: 3457
+    - path: src/data_preprocesor.py
+      hash: md5
+      md5: b7299e05c0ba5fc834e9d6a64d711020
+      size: 3361
+    params:
+      params.yaml:
+        PREPROCESSING.RANDOM_STATE: 42
+        PREPROCESSING.TEST_SIZE: 0.2

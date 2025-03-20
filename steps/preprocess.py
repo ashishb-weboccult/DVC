@@ -1,3 +1,4 @@
+import yaml
 import pandas as pd
 import logging
 from typing import Annotated, Tuple
@@ -5,6 +6,12 @@ from src.data_preprocesor import DataPreProcessor, SplitData, DataCleaning, Sand
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+with open("params.yaml", "r") as f:
+    PARAM = yaml.safe_load(f)
+
+TEST_SIZE = PARAM['PREPROCESSING']['TEST_SIZE']
+RANDOM_STATE = PARAM['PREPROCESSING']['RANDOM_STATE']
 
 def preprocess_data(dataframe: pd.DataFrame)->Tuple[
     Annotated[pd.DataFrame, 'X_train'], 
@@ -26,7 +33,7 @@ def preprocess_data(dataframe: pd.DataFrame)->Tuple[
             raise ValueError("Failed to preprocess the data") 
         
         try: # try processing the splitting data 
-            split_data_strategy = SplitData(DataFrame=processed_data)
+            split_data_strategy = SplitData(DataFrame=processed_data, test_size=TEST_SIZE, random_state=RANDOM_STATE)
             preprocesor = DataPreProcessor(data_stratergy=split_data_strategy)
             X_train, X_test, y_train, y_test = preprocesor.process_data()
             logger.info("Data Split Successfully")
@@ -52,4 +59,4 @@ def preprocess_data(dataframe: pd.DataFrame)->Tuple[
         return X_train, X_test, y_train, y_test
 
     finally:
-        logger.info("Preprocess step hsas")
+        logger.info("Preprocess step has completed")
