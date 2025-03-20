@@ -16,7 +16,7 @@ def preprocess_data(dataframe: pd.DataFrame)->Tuple[
     this will return the train and test dataframes for the model 
     """
     try:
-        try:
+        try: # try procesing the Data clearning
             data_clearning_strategy = DataCleaning(dataframe=dataframe)
             preprocesor = DataPreProcessor(data_stratergy=data_clearning_strategy)
             processed_data = preprocesor.process_data()
@@ -25,7 +25,7 @@ def preprocess_data(dataframe: pd.DataFrame)->Tuple[
         except:
             raise ValueError("Failed to preprocess the data") 
         
-        try: 
+        try: # try processing the splitting data 
             split_data_strategy = SplitData(DataFrame=processed_data)
             preprocesor = DataPreProcessor(data_stratergy=split_data_strategy)
             X_train, X_test, y_train, y_test = preprocesor.process_data()
@@ -34,7 +34,7 @@ def preprocess_data(dataframe: pd.DataFrame)->Tuple[
         except: 
             raise ValueError("Failed to split the data")
     
-        try:
+        try: # try to scale the data
             scaling_strategy = SandardScaling(X_train=X_train, X_test=X_test)
             preprocessor = DataPreProcessor(data_stratergy=scaling_strategy)
 

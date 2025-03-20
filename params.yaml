@@ -1,6 +1,6 @@
 INGESTION:
   DATA_PATH: "data/Stroke_Prediction_Indians.csv"
 
-PREPROCESS:
-  
-
+PREPROCESSING: 
+  TEST_SIZE: 0.2 
+  RANDOM_STATE: 42

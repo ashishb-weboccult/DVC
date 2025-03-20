@@ -1,3 +1,4 @@
+import yaml
 import pandas as pd
 import logging
 from typing import Annotated
@@ -6,7 +7,12 @@ from src.data_ingestion import Ingestor, IngestFromPath
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-def ingest_data(data_path: str)->Annotated[pd.DataFrame, "Loaded Dataframe"]:
+with open("params.yaml", "r") as ymlfile:
+    CONFIG = yaml.load(ymlfile, Loader=yaml.FullLoader)
+
+DATA_PATH = CONFIG["INGESTION"]["DATA_PATH"]
+
+def ingest_data(data_path: str = DATA_PATH)->Annotated[pd.DataFrame, "Loaded Dataframe"]:
     """this will ingest the data into DataFrame Ojb from your given path 
     
     Args: 

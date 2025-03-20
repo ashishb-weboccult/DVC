@@ -1,0 +1,14 @@
+stages:
+  Ingestion:
+    cmd: PYTHONPATH=. python steps/ingestion.py
+    
+    params:
+      - INGESTION.DATA_PATH
+    deps:
+    - data
+    - src/data_ingestion.py
+    - steps/ingestion.py 
+
+    # outs:
+    # - data/Stroke_Prediction_Indians.csv
+    

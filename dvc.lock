@@ -1,0 +1,21 @@
+schema: '2.0'
+stages:
+  Ingestion:
+    cmd: PYTHONPATH=. python steps/ingestion.py
+    deps:
+    - path: data
+      hash: md5
+      md5: 11540d792171f914b62ee47c6e0cc4e3.dir
+      size: 19840717
+      nfiles: 1
+    - path: src/data_ingestion.py
+      hash: md5
+      md5: 5fa3ff2ce304162819d474eb0cb41536
+      size: 3457
+    - path: steps/ingestion.py
+      hash: md5
+      md5: b8459d3d65bfaeb2a7c50874c6efa8c6
+      size: 1220
+    params:
+      params.yaml:
+        INGESTION.DATA_PATH: data/Stroke_Prediction_Indians.csv
